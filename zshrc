@@ -99,3 +99,6 @@ source $ZSH/oh-my-zsh.sh
 # fi
 
 alias ctags="`brew --prefix`/bin/ctags"
+
+# autojump
+[[ -s $(brew --prefix)/etc/profile.d/autojump.sh ]] && . $(brew --prefix)/etc/profile.d/autojump.sh
