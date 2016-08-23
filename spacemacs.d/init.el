@@ -38,7 +38,11 @@ values."
      ;; ----------------------------------------------------------------
      ivy
      helm
-     auto-completion
+     (auto-completion :variables
+                      auto-completion-enable-snippets-in-popup t
+                      auto-completion-enable-help-tooltip t
+                      auto-completion-enable-sort-by-usage t
+                     )
      better-defaults
      emacs-lisp
      git
@@ -52,12 +56,15 @@ values."
      version-control
      osx
      react
+     (chinese :variables
+              chinese-enable-fcitx t
+              chinese-enable-youdao-dict t)
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '()
+   dotspacemacs-additional-packages '(chinese-pyim-basedict)
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
@@ -327,7 +334,10 @@ you should place your code here."
        (require 'js2-mode-expansions)
        ))
   (push '("\\.js\\'" . react-mode) auto-mode-alist)
-  )
+  ;;chinese
+  (spacemacs//set-monospaced-font   "Source Code Pro" "Hiragino Sans GB" 14 16)
+  (chinese-pyim-basedict-enable)
+)
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
