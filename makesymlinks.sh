@@ -8,7 +8,7 @@
 
 dir=~/dotfiles                    # dotfiles directory
 olddir=~/dotfiles_old             # old dotfiles backup directory
-files="zshrc ctags eslintrc"    # list of files/folders to symlink in homedir
+files="zshrc ctags eslintrc spacemacs.d"    # list of files/folders to symlink in homedir
 
 ##########
 
