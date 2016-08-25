@@ -43,7 +43,9 @@ values."
                       auto-completion-enable-help-tooltip t
                       auto-completion-enable-sort-by-usage t
                      )
-     better-defaults
+     (better-defaults :variables
+                      better-defaults-move-to-beginning-of-code-first t
+                      better-defaults-move-to-end-of-code-first t)
      emacs-lisp
      git
      ;; markdown
@@ -111,7 +113,7 @@ values."
    ;; with `:variables' keyword (similar to layers). Check the editing styles
    ;; section of the documentation for details on available variables.
    ;; (default 'vim)
-   dotspacemacs-editing-style 'vim
+   dotspacemacs-editing-style 'hybrid
    ;; If non nil output loading progress in `*Messages*' buffer. (default nil)
    dotspacemacs-verbose-loading nil
    ;; Specify the startup banner. Default value is `official', it displays
@@ -337,6 +339,10 @@ you should place your code here."
   ;;chinese
   (spacemacs//set-monospaced-font   "Source Code Pro" "Hiragino Sans GB" 14 16)
   (chinese-pyim-basedict-enable)
+  ;;hungry delete
+  (add-hook 'prog-mode-hook 'spacemacs/toggle-hungry-delete-on)
+  ;;delete selection mode
+  (delete-selection-mode 1)
 )
 
 ;; Do not write anything past this comment. This is where Emacs will
