@@ -66,7 +66,10 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(chinese-pyim-basedict)
+   dotspacemacs-additional-packages '(chinese-pyim-basedict
+                                      ;;
+                                      paredit
+                                      lispy)
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
@@ -286,7 +289,7 @@ values."
    ;; `trailing' to delete only the whitespace at end of lines, `changed'to
    ;; delete only whitespace for changed lines or `nil' to disable cleanup.
    ;; (default nil)
-   dotspacemacs-whitespace-cleanup nil
+   dotspacemacs-whitespace-cleanup 'all
    ))
 
 (defun dotspacemacs/user-init ()
@@ -315,6 +318,39 @@ you should place your code here."
   ;;web-mode indent
   (setq-default js2-basic-offset 2)
   (setq-default js-indent-level 2)
+  (defun react-imenu-make-index ()
+    (interactive)
+    (save-excursion
+      (imenu--generic-function '(("describe" "\\s-*describe\\s-*(\\s-*[\"']\\(.+\\)[\"']\\s-*,.*" 1)
+                               ("it" "\\s-*it\\s-*(\\s-*[\"']\\(.+\\)[\"']\\s-*,.*" 1)
+                               ("test" "\\s-*test\\s-*(\\s-*[\"']\\(.+\\)[\"']\\s-*,.*" 1)
+                               ("before" "\\s-*before\\s-*(\\s-*[\"']\\(.+\\)[\"']\\s-*,.*" 1)
+                               ("after" "\\s-*after\\s-*(\\s-*[\"']\\(.+\\)[\"']\\s-*,.*" 1)
+                               ("Controller" "[. \t]controller([ \t]*['\"]\\([^'\"]+\\)" 1)
+                               ("Controller" "[. \t]controllerAs:[ \t]*['\"]\\([^'\"]+\\)" 1)
+                               ("Filter" "[. \t]filter([ \t]*['\"]\\([^'\"]+\\)" 1)
+                               ("State" "[. \t]state([ \t]*['\"]\\([^'\"]+\\)" 1)
+                               ("Factory" "[. \t]factory([ \t]*['\"]\\([^'\"]+\\)" 1)
+                               ("Service" "[. \t]service([ \t]*['\"]\\([^'\"]+\\)" 1)
+                               ("Module" "[. \t]module([ \t]*['\"]\\([a-zA-Z0-9_\.]+\\)" 1)
+                               ("ngRoute" "[. \t]when(\\(['\"][a-zA-Z0-9_\/]+['\"]\\)" 1)
+                               ("Directive" "[. \t]directive([ \t]*['\"]\\([^'\"]+\\)" 1)
+                               ("Event" "[. \t]\$on([ \t]*['\"]\\([^'\"]+\\)" 1)
+                               ("Config" "[. \t]config([ \t]*function *( *\\([^\)]+\\)" 1)
+                               ("Config" "[. \t]config([ \t]*\\[ *['\"]\\([^'\"]+\\)" 1)
+                               ("OnChange" "[ \t]*\$(['\"]\\([^'\"]*\\)['\"]).*\.change *( *function" 1)
+                               ("OnClick" "[ \t]*\$([ \t]*['\"]\\([^'\"]*\\)['\"]).*\.click *( *function" 1)
+                               ("Watch" "[. \t]\$watch( *['\"]\\([^'\"]+\\)" 1)
+                               ("Function" "function[ \t]+\\([a-zA-Z0-9_$.]+\\)[ \t]*(" 1)
+                               ("Function" "^[ \t]*\\([a-zA-Z0-9_$.]+\\)[ \t]*=[ \t]*function[ \t]*(" 1)
+                               ("Function" "^var[ \t]*\\([a-zA-Z0-9_$.]+\\)[ \t]*=[ \t]*function[ \t]*(" 1)
+                               ("Function" "^let[ \t]*\\([a-zA-Z0-9_$.]+\\)[ \t]*=[ \t]*function[ \t]*(" 1);; es6 function
+                               ("Function" "^const[ \t]*\\([a-zA-Z0-9_$.]+\\)[ \t]*=[ \t]*function[ \t]*(" 1);; es6 function
+                               ("Function" "^[ \t]*\\([a-zA-Z0-9_$.]+\\)[ \t]*()[ \t]*{" 1)
+                               ;;("Function" "" 1);; react es6 function todo
+                               ("Function" "^[ \t]*\\([a-zA-Z0-9_$.]+\\)[ \t]*:[ \t]*function[ \t]*(" 1)
+                               ("Class" "^[ \t]*var[ \t]*\\([0-9a-zA-Z]+\\)[ \t]*=[ \t]*\\([a-zA-Z]*\\).extend" 1)
+                               ))))
   (defun my-web-mode-hook ()
     (setq web-mode-markup-indent-offset 2)
     (setq web-mode-css-indent-offset 2)
@@ -325,6 +361,7 @@ you should place your code here."
     (er/add-js2-mode-expansions) 
     ;;(setq company-backends '((company-dabbrev-code :with company-keywords company-etags)
     ;;                                 company-files company-dabbrev company-capf))
+    (setq imenu-create-index-function 'react-imenu-make-index)
     )
   (add-hook 'web-mode-hook  'my-web-mode-hook)
   (eval-after-load "web-mode"
@@ -343,6 +380,12 @@ you should place your code here."
   (add-hook 'prog-mode-hook 'spacemacs/toggle-hungry-delete-on)
   ;;delete selection mode
   (delete-selection-mode 1)
+  ;;hungry-delete and smartparens
+  (defadvice hungry-delete-backward (before sp-delete-pair-advice activate)
+    (save-match-data
+      (sp-delete-pair (ad-get-arg 0))))
+  ;;helm-imenu
+  (spacemacs/set-leader-keys "si" 'counsel-imenu)
 )
 
 ;; Do not write anything past this comment. This is where Emacs will
