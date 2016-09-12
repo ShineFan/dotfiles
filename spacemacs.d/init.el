@@ -375,9 +375,12 @@ you should place your code here."
   ;;hungry delete on
   (add-hook 'prog-mode-hook 'spacemacs/toggle-hungry-delete-on)
   ;;hungry-delete and smartparens
-  (defadvice hungry-delete-backward (before sp-delete-pair-advice activate)
-    (save-match-data
-      (sp-delete-pair (ad-get-arg 0))))
+  (defun my-smartparens-mode-hook ()
+    (defadvice hungry-delete-backward (before sp-delete-pair-advice activate)
+      (save-match-data
+        (sp-delete-pair (ad-get-arg 0))))
+    )
+  (add-hook 'smartparens-mode-hook 'my-smartparens-mode-hook)
   ;;helm-imenu
   (spacemacs/set-leader-keys "si" 'counsel-imenu)
   ;;org-agenda
