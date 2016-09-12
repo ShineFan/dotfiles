@@ -46,6 +46,8 @@ values."
      (better-defaults :variables
                       better-defaults-move-to-beginning-of-code-first t
                       better-defaults-move-to-end-of-code-first t)
+     (shell :variables shell-default-shell 'eshell)
+     sql
      emacs-lisp
      git
      ;; markdown
@@ -53,7 +55,7 @@ values."
      ;; (shell :variables
      ;;        shell-default-height 30
      ;;        shell-default-position 'bottom)
-     spell-checking
+     (spell-checking :variables spell-checking-enable-by-default nil)
      syntax-checking
      version-control
      osx
@@ -61,6 +63,7 @@ values."
      (chinese :variables
               chinese-enable-fcitx t
               chinese-enable-youdao-dict t)
+     (python :variables python-enable-yapf-format-on-save t)
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -356,36 +359,30 @@ you should place your code here."
     (setq web-mode-css-indent-offset 2)
     (setq web-mode-code-indent-offset 2)
     (setq web-mode-indent-style 2)
-    ;;expand-region config
-    (er/add-js-mode-expansions)
-    (er/add-js2-mode-expansions) 
     ;;(setq company-backends '((company-dabbrev-code :with company-keywords company-etags)
     ;;                                 company-files company-dabbrev company-capf))
-    (setq imenu-create-index-function 'react-imenu-make-index)
+    ;;(setq imenu-create-index-function 'react-imenu-make-index)
     )
   (add-hook 'web-mode-hook  'my-web-mode-hook)
-  (eval-after-load "web-mode"
-    '(progn
-       ;; make org-mode export fail, I use evil and evil-matchit
-       ;; to select text, so expand-region.el is not used
-       ;;(remove-hook 'web-mode-hook 'er/add-web-mode-expansions)
-       (require 'js-mode-expansions)
-       (require 'js2-mode-expansions)
-       ))
   (push '("\\.js\\'" . react-mode) auto-mode-alist)
   ;;chinese
   (spacemacs//set-monospaced-font   "Source Code Pro" "Hiragino Sans GB" 14 16)
   (chinese-pyim-basedict-enable)
-  ;;hungry delete
-  (add-hook 'prog-mode-hook 'spacemacs/toggle-hungry-delete-on)
   ;;delete selection mode
   (delete-selection-mode 1)
+  ;;smartparens on
+  (spacemacs/toggle-smartparens-globally-on)
+  ;;hungry delete on
+  (add-hook 'prog-mode-hook 'spacemacs/toggle-hungry-delete-on)
   ;;hungry-delete and smartparens
   (defadvice hungry-delete-backward (before sp-delete-pair-advice activate)
     (save-match-data
       (sp-delete-pair (ad-get-arg 0))))
   ;;helm-imenu
   (spacemacs/set-leader-keys "si" 'counsel-imenu)
+  ;;org-agenda
+  (setq org-agenda-files (list "~/org/notes.org"
+                               "~/lenuo/svn/FarmManagement/code/master/trunk/web-client/TODOs.org"))
 )
 
 ;; Do not write anything past this comment. This is where Emacs will
