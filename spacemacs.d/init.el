@@ -36,13 +36,13 @@ values."
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
-     ivy
      helm
+     ivy
      (auto-completion :variables
                       auto-completion-enable-snippets-in-popup t
                       auto-completion-enable-help-tooltip t
                       auto-completion-enable-sort-by-usage t
-                     )
+                      )
      (better-defaults :variables
                       better-defaults-move-to-beginning-of-code-first t
                       better-defaults-move-to-end-of-code-first t)
@@ -72,6 +72,7 @@ values."
    dotspacemacs-additional-packages '(chinese-pyim-basedict
                                       ;;
                                       paredit
+                                      paredit-everywhere
                                       lispy)
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -190,7 +191,7 @@ values."
    dotspacemacs-display-default-layout nil
    ;; If non nil then the last auto saved layouts are resume automatically upon
    ;; start. (default nil)
-   dotspacemacs-auto-resume-layouts nil
+   dotspacemacs-auto-resume-layouts t
    ;; Size (in MB) above which spacemacs will prompt to open the large file
    ;; literally to avoid performance issues. Opening a file literally means that
    ;; no major mode or minor modes are active. (default is 1)
@@ -318,50 +319,23 @@ you should place your code here."
   (setq company-dabbrev-code-other-buffers 'all)
   (setq company-dabbrev-code-modes t)
   (setq company-dabbrev-ignore-buffers "nil")
+  (defun react-imenu-make-index ()
+  (interactive)
+  (save-excursion
+    (imenu--generic-function '(("Class" "^[ \t]*cc\.\\(.+\\)[ \t]*=[ \t]*cc\.\\(.+\\)\.extend" 1)
+                               ("Function" "^[ \t]*\\([a-zA-Z0-9_$.]+\\)[ \t]*(\\([a-zA-Z0-9,_$.]+\\)?)[ \t]*{" 1)))))
   ;;web-mode indent
   (setq-default js2-basic-offset 2)
   (setq-default js-indent-level 2)
-  (defun react-imenu-make-index ()
-    (interactive)
-    (save-excursion
-      (imenu--generic-function '(("describe" "\\s-*describe\\s-*(\\s-*[\"']\\(.+\\)[\"']\\s-*,.*" 1)
-                               ("it" "\\s-*it\\s-*(\\s-*[\"']\\(.+\\)[\"']\\s-*,.*" 1)
-                               ("test" "\\s-*test\\s-*(\\s-*[\"']\\(.+\\)[\"']\\s-*,.*" 1)
-                               ("before" "\\s-*before\\s-*(\\s-*[\"']\\(.+\\)[\"']\\s-*,.*" 1)
-                               ("after" "\\s-*after\\s-*(\\s-*[\"']\\(.+\\)[\"']\\s-*,.*" 1)
-                               ("Controller" "[. \t]controller([ \t]*['\"]\\([^'\"]+\\)" 1)
-                               ("Controller" "[. \t]controllerAs:[ \t]*['\"]\\([^'\"]+\\)" 1)
-                               ("Filter" "[. \t]filter([ \t]*['\"]\\([^'\"]+\\)" 1)
-                               ("State" "[. \t]state([ \t]*['\"]\\([^'\"]+\\)" 1)
-                               ("Factory" "[. \t]factory([ \t]*['\"]\\([^'\"]+\\)" 1)
-                               ("Service" "[. \t]service([ \t]*['\"]\\([^'\"]+\\)" 1)
-                               ("Module" "[. \t]module([ \t]*['\"]\\([a-zA-Z0-9_\.]+\\)" 1)
-                               ("ngRoute" "[. \t]when(\\(['\"][a-zA-Z0-9_\/]+['\"]\\)" 1)
-                               ("Directive" "[. \t]directive([ \t]*['\"]\\([^'\"]+\\)" 1)
-                               ("Event" "[. \t]\$on([ \t]*['\"]\\([^'\"]+\\)" 1)
-                               ("Config" "[. \t]config([ \t]*function *( *\\([^\)]+\\)" 1)
-                               ("Config" "[. \t]config([ \t]*\\[ *['\"]\\([^'\"]+\\)" 1)
-                               ("OnChange" "[ \t]*\$(['\"]\\([^'\"]*\\)['\"]).*\.change *( *function" 1)
-                               ("OnClick" "[ \t]*\$([ \t]*['\"]\\([^'\"]*\\)['\"]).*\.click *( *function" 1)
-                               ("Watch" "[. \t]\$watch( *['\"]\\([^'\"]+\\)" 1)
-                               ("Function" "function[ \t]+\\([a-zA-Z0-9_$.]+\\)[ \t]*(" 1)
-                               ("Function" "^[ \t]*\\([a-zA-Z0-9_$.]+\\)[ \t]*=[ \t]*function[ \t]*(" 1)
-                               ("Function" "^var[ \t]*\\([a-zA-Z0-9_$.]+\\)[ \t]*=[ \t]*function[ \t]*(" 1)
-                               ("Function" "^let[ \t]*\\([a-zA-Z0-9_$.]+\\)[ \t]*=[ \t]*function[ \t]*(" 1);; es6 function
-                               ("Function" "^const[ \t]*\\([a-zA-Z0-9_$.]+\\)[ \t]*=[ \t]*function[ \t]*(" 1);; es6 function
-                               ("Function" "^[ \t]*\\([a-zA-Z0-9_$.]+\\)[ \t]*()[ \t]*{" 1)
-                               ;;("Function" "" 1);; react es6 function todo
-                               ("Function" "^[ \t]*\\([a-zA-Z0-9_$.]+\\)[ \t]*:[ \t]*function[ \t]*(" 1)
-                               ("Class" "^[ \t]*var[ \t]*\\([0-9a-zA-Z]+\\)[ \t]*=[ \t]*\\([a-zA-Z]*\\).extend" 1)
-                               ))))
   (defun my-web-mode-hook ()
     (setq web-mode-markup-indent-offset 2)
     (setq web-mode-css-indent-offset 2)
     (setq web-mode-code-indent-offset 2)
     (setq web-mode-indent-style 2)
+    ;;imenu
+    (setq imenu-create-index-function 'react-imenu-make-index)
     ;;(setq company-backends '((company-dabbrev-code :with company-keywords company-etags)
     ;;                                 company-files company-dabbrev company-capf))
-    ;;(setq imenu-create-index-function 'react-imenu-make-index)
     )
   (add-hook 'web-mode-hook  'my-web-mode-hook)
   (push '("\\.js\\'" . react-mode) auto-mode-alist)
@@ -370,6 +344,10 @@ you should place your code here."
   (chinese-pyim-basedict-enable)
   ;;delete selection mode
   (delete-selection-mode 1)
+  ;;electric-pair-mode
+  ;;(electric-pair-mode 1)
+  ;;(require 'paredit-everywhere)
+  ;;(add-hook 'prog-mode-hook 'paredit-everywhere-mode)
   ;;smartparens on
   (spacemacs/toggle-smartparens-globally-on)
   ;;hungry delete on
@@ -379,6 +357,10 @@ you should place your code here."
     (defadvice hungry-delete-backward (before sp-delete-pair-advice activate)
       (save-match-data
         (sp-delete-pair (ad-get-arg 0))))
+    (global-set-key (kbd "C-<") 'sp-slurp-hybrid-sexp)
+    (global-set-key (kbd "C->") 'sp-forward-barf-sexp)
+    (global-set-key (kbd "M->") 'sp-backward-slurp-sexp)
+    (global-set-key (kbd "M-<") 'sp-backward-barf-sexp)
     )
   (add-hook 'smartparens-mode-hook 'my-smartparens-mode-hook)
   ;;helm-imenu
@@ -386,7 +368,18 @@ you should place your code here."
   ;;org-agenda
   (setq org-agenda-files (list "~/org/notes.org"
                                "~/lenuo/svn/FarmManagement/code/master/trunk/web-client/TODOs.org"))
-)
+  ;;check large file
+  (defun spacemacs/check-large-file ()
+    (when (> (buffer-size) 500000)
+      (progn (fundamental-mode)
+             (hl-line-mode -1)))
+    (if (and (executable-find "wc")
+             (> (string-to-number (shell-command-to-string (format "wc -l %s" (buffer-file-name))))
+                5000))
+        (linum-mode -1)))
+
+  (add-hook 'find-file-hook 'spacemacs/check-large-file)
+  )
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.

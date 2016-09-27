@@ -1,0 +1,25 @@
+# -*- mode: snippet -*-
+# name: es6#React reducer
+# key: exprr
+# --
+import {${MODEL}} from '../constants';
+
+const initialState = {
+  loading: false,
+  data: [],
+  failed: false,
+  error: ''
+};
+
+export default function ${MODEL}Reducer(state = initialState, action) {
+
+  switch (action.type) {
+    case ${MODEL}.FETCH_LIST:
+      return {
+        ...state,
+        ${field}
+      };
+   default:
+      return state;
+  }
+}
