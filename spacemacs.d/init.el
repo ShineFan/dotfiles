@@ -324,7 +324,7 @@ you should place your code here."
   (interactive)
   (save-excursion
     (imenu--generic-function '(("Class" "^[ \t]*cc\.\\(.+\\)[ \t]*=[ \t]*cc\.\\(.+\\)\.extend" 1)
-                               ("Function" "^[ \t]*\\([a-zA-Z0-9_$.]+\\)[ \t]*(\\([a-zA-Z0-9,_$.]+\\)?)[ \t]*{" 1)))))
+                               ("Function" "^[ \t]*\\([a-zA-Z0-9_$.]+\\)[ \t]*([ \t]*\\([ \t]*\\|\\([a-zA-Z0-9_$.]+\\)\\(,[ \t]*[a-zA-Z0-9_$.]+\\)*\\)[ \t]*)[ \t]*{" 1)))))
   ;;web-mode indent
   (setq-default js2-basic-offset 2)
   (setq-default js-indent-level 2)
