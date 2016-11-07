@@ -380,6 +380,7 @@ you should place your code here."
         (linum-mode -1)))
 
   (add-hook 'find-file-hook 'spacemacs/check-large-file)
+  (global-linum-mode)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
