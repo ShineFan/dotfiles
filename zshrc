@@ -49,16 +49,20 @@ ZSH_THEME="robbyrussell"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git,emacs,vim,autojump)
+plugins=(git emacs vim autojump osx adb node npm zsh-autosuggestions)
 
 # User configuration
 
-export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/shine/Library/Android/sdk/platform-tools"
-# export MANPATH="/usr/local/man:$MANPATH"
+export ANDROID_HOME=/usr/local/Cellar/android-sdk/24.4.1_1
+export ANDROID_SDK=/usr/local/Cellar/android-sdk/24.4.1_1
+export ANDROID_NDK=/usr/local/Cellar/android-ndk/r13b
 export LENUO=/Users/shine/lenuo
 export LENUO_SVN=$LENUO/svn
 export FARM=$LENUO_SVN/FarmManagement
 export FARM_WEB_CLIENT=$FARM/code/master/trunk/web-client
+
+export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$ANDROID_HOME/platform-tools"
+# export MANPATH="/usr/local/man:$MANPATH"
 
 source $ZSH/oh-my-zsh.sh
 
@@ -103,3 +107,9 @@ alias ctags="`brew --prefix`/bin/ctags"
 
 # autojump
 [[ -s $(brew --prefix)/etc/profile.d/autojump.sh ]] && . $(brew --prefix)/etc/profile.d/autojump.sh
+
+#alias for cnpm
+alias cnpm="npm --registry=https://registry.npm.taobao.org \
+  --cache=$HOME/.npm/.cache/cnpm \
+  --disturl=https://npm.taobao.org/dist \
+  --userconfig=$HOME/.cnpmrc"
