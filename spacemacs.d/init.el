@@ -31,15 +31,19 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
+     octave
+     swift
+     markdown
+     ruby
+     csv
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
-     helm
+     ;; helm
      ivy
      (auto-completion :variables
-                      auto-completion-enable-snippets-in-popup t
                       auto-completion-enable-help-tooltip t
                       auto-completion-enable-sort-by-usage t
                       )
@@ -64,6 +68,10 @@ values."
               chinese-enable-fcitx t
               chinese-enable-youdao-dict t)
      (python :variables python-enable-yapf-format-on-save t)
+     '((c-c++ :variables
+              c-c++-default-mode-for-headers 'c++-mode
+              c-c++-enable-clang-support t))
+     java
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -304,6 +312,8 @@ executes.
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
   (setq custom-file (expand-file-name "custom.el" dotspacemacs-directory))
+  (setq exec-path-from-shell-check-startup-files nil)
+  (setq-default dotspacemacs-themes '(spacemacs-light leuven zenburn))
   )
 
 (defun dotspacemacs/user-config ()
@@ -320,6 +330,7 @@ you should place your code here."
   (setq company-dabbrev-code-other-buffers 'all)
   (setq company-dabbrev-code-modes t)
   (setq company-dabbrev-ignore-buffers "nil")
+  ;;imenu
   (defun react-imenu-make-index ()
   (interactive)
   (save-excursion
@@ -335,8 +346,7 @@ you should place your code here."
     (setq web-mode-indent-style 2)
     ;;imenu
     (setq imenu-create-index-function 'react-imenu-make-index)
-    ;;(setq company-backends '((company-dabbrev-code :with company-keywords company-etags)
-    ;;                                 company-files company-dabbrev company-capf))
+    (css-mode 0)
     )
   (add-hook 'web-mode-hook  'my-web-mode-hook)
   (push '("\\.js\\'" . react-mode) auto-mode-alist)
@@ -381,7 +391,60 @@ you should place your code here."
 
   (add-hook 'find-file-hook 'spacemacs/check-large-file)
   (global-linum-mode)
+  ;; iedit
+  (require 'iedit)
+  (defun iedit-dwim (arg)
+    "Starts iedit but uses \\[narrow-to-defun] to limit its scope."
+    (interactive "P")
+    (if arg
+        (iedit-mode)
+      (save-excursion
+        (save-restriction
+          (widen)
+          ;; this function determines the scope of `iedit-start'.
+          (if iedit-mode
+              (iedit-done)
+            ;; `current-word' can of course be replaced by other
+            ;; functions.
+            (narrow-to-defun)
+            (iedit-start (current-word) (point-min) (point-max)))))))
+
+
+
+  (global-set-key (kbd "C-;") 'iedit-dwim)
+  ;; chinese
+  (when (configuration-layer/layer-usedp 'chinese)
+    (when (spacemacs/system-is-mac)
+      (spacemacs//set-monospaced-font "Source Code Pro" "Hiragino Sans GB" 14 16)))
+  ;; p not copy
+  (defun evil-paste-after-from-0 ()
+    (interactive)
+    (let ((evil-this-register ?0))
+      (call-interactively 'evil-paste-after)))
+
+  (define-key evil-visual-state-map "p" 'evil-paste-after-from-0)
+  (define-key evil-visual-state-map "P" 'evil-paste-after-from-0)
+  ;; visual P paste
+  (fset 'evil-visual-update-x-selection 'ignore)
+  ;;projectile
+  ;;(setq projectile-enable-caching t)
+  ;; c c++
+  ;; Bind clang-format-region to C-M-tab in all modes:
+  (global-set-key [C-M-tab] 'clang-format-region)
+  ;; Bind clang-format-buffer to tab on the c++-mode only:
+  (add-hook 'c++-mode-hook 'clang-format-bindings)
+  (defun clang-format-bindings ()
+    (define-key c++-mode-map [tab] 'clang-format-buffer))
+  ;; Java Layer
+  (setq eclim-eclipse-dirs "/Applications/Eclipse.app/Contents/Eclipse"
+        eclim-executable "/Applications/Eclipse.app/Contents/Eclipse/eclim")
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
+(defun dotspacemacs/emacs-custom-settings ()
+  "Emacs custom settings.
+This is an auto-generated function, do not modify its content directly, use
+Emacs customize menu instead.
+This function is called at the very end of Spacemacs initialization."
+)
