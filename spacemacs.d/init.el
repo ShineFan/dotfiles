@@ -346,6 +346,8 @@ you should place your code here."
     (setq web-mode-indent-style 2)
     ;;imenu
     (setq imenu-create-index-function 'react-imenu-make-index)
+    (setq company-backends-react-mode '((company-dabbrev-code company-gtags company-etags company-keywords)
+                                       company-files company-dabbrev))
     )
   (add-hook 'web-mode-hook  'my-web-mode-hook)
   (push '("\\.js\\'" . react-mode) auto-mode-alist)
