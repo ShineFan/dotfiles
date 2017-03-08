@@ -36,12 +36,6 @@ values."
      markdown
      ruby
      csv
-     ;; ----------------------------------------------------------------
-     ;; Example of useful layers you may want to use right away.
-     ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
-     ;; <M-m f e R> (Emacs style) to install them.
-     ;; ----------------------------------------------------------------
-     ;; helm
      ivy
      (auto-completion :variables
                       auto-completion-enable-help-tooltip t
@@ -54,11 +48,8 @@ values."
      sql
      emacs-lisp
      git
-     ;; markdown
+     markdown
      org
-     ;; (shell :variables
-     ;;        shell-default-height 30
-     ;;        shell-default-position 'bottom)
      (spell-checking :variables spell-checking-enable-by-default nil)
      syntax-checking
      version-control
@@ -68,9 +59,9 @@ values."
               chinese-enable-fcitx t
               chinese-enable-youdao-dict t)
      (python :variables python-enable-yapf-format-on-save t)
-     '((c-c++ :variables
+     (c-c++ :variables
               c-c++-default-mode-for-headers 'c++-mode
-              c-c++-enable-clang-support t))
+              c-c++-enable-clang-support t)
      java
      )
    ;; List of additional packages that will be installed without being
