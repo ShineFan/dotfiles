@@ -369,8 +369,12 @@ you should place your code here."
   ;;helm-imenu
   (spacemacs/set-leader-keys "si" 'counsel-imenu)
   ;;org-agenda
-  (setq org-agenda-files (list "~/org/notes.org"
-                               "~/lenuo/svn/FarmManagement/code/master/trunk/web-client/TODOs.org"))
+  (setq org-capture-templates
+        '(("t" "Todo" entry (file+headline "~/org/gtd.org" "Tasks")
+           "* TODO %?\n  %i\n  %a")
+          ("j" "Journal" entry (file+datetree "~/org/journal.org")
+           "* %?\nEntered on %U\n  %i\n  %a")))
+  (setq org-agenda-files (list "~/org/gtd.org"))
   ;;check large file
   (defun spacemacs/check-large-file ()
     (when (> (buffer-size) 500000)
