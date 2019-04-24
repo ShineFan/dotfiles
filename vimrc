@@ -28,6 +28,8 @@ Plugin 'VundleVim/Vundle.vim'
 " Plugin 'ascenator/L9', {'name': 'newL9'}
 
 "Shine's Plugins
+Bundle 'tpope/vim-surround'
+Bundle "Raimondi/delimitMate"
 Bundle 'christoomey/vim-run-interactive'
 Bundle 'Valloric/YouCompleteMe'
 Bundle 'croaky/vim-colors-github'
@@ -60,3 +62,12 @@ else                              "设置背景色为深色
     set background=dark           "就开启256色支持，默认为8色
     set t_Co=256
 endif
+
+set number
+set autoindent
+set smartindent
+set expandtab
+" 大括号自动补全换行并缩进
+imap { {}<ESC>i<CR><ESC>V<O
+set tabstop=2
+set shiftwidth=2

@@ -30,14 +30,10 @@ values."
    dotspacemacs-configuration-layer-path '()
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(php
-     nginx
+   '(nginx
      yaml
-     octave
-     swift
-     markdown
-     ruby
-     ivy
+     ;; ivy
+     helm
      (auto-completion :variables
                       auto-completion-enable-help-tooltip t
                       auto-completion-enable-sort-by-usage t
@@ -51,7 +47,6 @@ values."
      git
      (markdown :variables markdown-live-preview-engine 'vmd)
      org
-     (spell-checking :variables spell-checking-enable-by-default nil)
      syntax-checking
      version-control
      osx
@@ -61,23 +56,16 @@ values."
               c-c++-default-mode-for-headers 'c++-mode
               c-c++-enable-clang-support t)
      java
-     (dash :variables
-           helm-dash-docset-newpath "~/Library/Application Support/Dash/DocSets")
      chrome
-     (mu4e :variables
-           mu4e-enable-mode-line t
-           mu4e-account-alist t
-           mu4e-mu-binary "/usr/local/bin/mu")
      javascript
-     ;; vue
-     groovy
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(org-redmine
+   dotspacemacs-additional-packages '(;; org-redmine
                                       geben
+                                      monokai-theme
                                       ;; (vue-mode :location (recipe :fetcher github :repo "codefalling/vue-mode"))
                                       )
    ;; A list of packages that cannot be updated.
@@ -86,7 +74,7 @@ values."
    dotspacemacs-excluded-packages '(company-web
                                     ;; todo errors
                                     font-lock+
-                                    counsel-css
+                                    ;; counsel-css
                                     evil-unimpaired)
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
@@ -112,7 +100,7 @@ values."
    ;; This variable has no effect if Emacs is launched with the parameter
    ;; `--insecure' which forces the value of this variable to nil.
    ;; (default t)
-   dotspacemacs-elpa-https t
+   dotspacemacs-elpa-https nil
    ;; Maximum allowed time in seconds to contact an ELPA repository.
    dotspacemacs-elpa-timeout 5
    ;; If non nil then spacemacs will check for updates at startup
@@ -151,7 +139,8 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(spacemacs-dark
+   dotspacemacs-themes '(monokai
+                         spacemacs-dark
                          spacemacs-light)
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
@@ -315,7 +304,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
   (setq custom-file (expand-file-name "custom.el" dotspacemacs-directory))
   (setq exec-path-from-shell-check-startup-files nil)
-  (setq-default dotspacemacs-themes '(spacemacs-dark spacemacs-light leuven zenburn))
+  (setq-default dotspacemacs-themes '(monokai spacemacs-light spacemacs-dark leuven zenburn))
   )
 
 (defun dotspacemacs/user-config ()
@@ -332,12 +321,7 @@ you should place your code here."
   (setq company-dabbrev-code-other-buffers 'all)
   (setq company-dabbrev-code-modes t)
   (setq company-dabbrev-ignore-buffers "nil")
-  ;;imenu
-  (defun react-imenu-make-index ()
-  (interactive)
-  (save-excursion
-    (imenu--generic-function '(("Class" "^[ \t]*cc\.\\(.+\\)[ \t]*=[ \t]*cc\.\\(.+\\)\.extend" 1)
-                               ("Function" "^[ \t]*\\([a-zA-Z0-9_$.]+\\)[ \t]*([ \t]*\\([ \t]*\\|\\([a-zA-Z0-9_$.]+\\)\\(,[ \t]*[a-zA-Z0-9_$.]+\\)*\\)[ \t]*)[ \t]*{" 1)))))
+
   ;;web-mode indent
   (setq-default js2-basic-offset 2)
   (setq-default js-indent-level 2)
@@ -347,8 +331,7 @@ you should place your code here."
     (setq web-mode-code-indent-offset 2)
     (setq web-mode-indent-style 2)
     (setq web-mode-block-padding 0)
-    ;;imenu
-    (setq imenu-create-index-function 'react-imenu-make-index)
+
     (setq company-backends-react-mode '((company-dabbrev-code company-gtags company-etags company-keywords)
                                        company-files company-dabbrev))
     )
@@ -442,58 +425,7 @@ you should place your code here."
   (define-key evil-visual-state-map "P" 'evil-paste-after-from-0)
   ;; visual P paste
   (fset 'evil-visual-update-x-selection 'ignore)
-  ;;projectile
-  ;;(setq projectile-enable-caching t)
-  ;; c c++
-  ;; Bind clang-format-region to C-M-tab in all modes:
-  (global-set-key [C-M-tab] 'clang-format-region)
-  ;; Bind clang-format-buffer to tab on the c++-mode only:
-  (add-hook 'c++-mode-hook 'clang-format-bindings)
-  (defun clang-format-bindings ()
-    (define-key c++-mode-map [tab] 'clang-format-buffer))
-  ;; chrome
-  (add-hook 'edit-server-done-hook (lambda () (shell-command "open -a \"Google Chrome\"")))
-  ;; mu4e
-  (setq mu4e-account-alist
-        '(("gmail"
-           ;; Under each account, set the account-specific variables you want.
-           (mu4e-sent-messages-behavior delete)
-           (mu4e-sent-folder "/[Gmail]/.Sent Mail")
-           (mu4e-drafts-folder "/[Gmail]/.Drafts")
-           (user-mail-address "fanyu.shine@gmail.com")
-           (user-full-name "Shine"))
-          ))
-  ;; (mu4e/mail-account-reset)
-  ;;; Set up some common mu4e variables
-  (setq ;;mu4e-maildir "~/Maildir"
-        mu4e-maildir "~/.mail"
-        ;;mu4e-trash-folder "/Trash"
-        ;;mu4e-refile-folder "/Archive"
-        ;;mu4e-get-mail-command "mbsync -a"
-        mu4e-get-mail-command "offlineimap"
-        mu4e-update-interval nil
-        mu4e-compose-signature-auto-include nil
-        mu4e-view-show-images t
-        mu4e-view-show-addresses t
-        mu4e-html2text-command "w3m -T text/html"
-)
 
-  ;;; Bookmarks
-  (setq mu4e-bookmarks
-        `(("flag:unread AND NOT flag:trashed" "Unread messages" ?u)
-          ("date:today..now" "Today's messages" ?t)
-          ("date:7d..now" "Last 7 days" ?w)
-          ("mime:image/*" "Messages with images" ?p)
-          ;; (,(mapconcat 'identity
-          ;;              (mapcar
-          ;;               (lambda (maildir)
-          ;;                 (concat "maildir:" (car maildir)))
-          ;;               mu4e-maildir-shortcuts) " OR ")
-          ;;  "All inboxes" ?i)
-          ))
-  (with-eval-after-load 'mu4e-alert
-    ;; Enable Desktop notifications
-    (mu4e-alert-set-default-style 'growl))
   ;; java
   ;; (setq eclim-auto-save nil)
 
@@ -509,16 +441,6 @@ you should place your code here."
         (setq-local flycheck-javascript-eslint-executable eslint))))
 
   (add-hook 'flycheck-mode-hook #'my/use-eslint-from-node-modules)
-  ;; Target Redmine URI
-  ;;   eg. Redmine Project
-  (setq org-redmine-uri "http://192.168.1.253:8888/redmine")
-  (setq org-redmine-auth-username "fanyu")
-  (setq org-redmine-auth-password "fanyu123")
-  ;; (setq org-redmine-uri "http://www.redmine.org")
-  ;; (setq org-redmine-auth-api-key nil)
-  ;; (setq org-redmine-auth-username nil)
-  ;; (setq org-redmine-auth-password nil)
-  ;; (setq org-redmine-auth-netrc-use nil)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
