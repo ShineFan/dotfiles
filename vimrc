@@ -31,6 +31,7 @@ Plugin 'VundleVim/Vundle.vim'
 Bundle 'tpope/vim-surround'
 Bundle "Raimondi/delimitMate"
 Bundle 'christoomey/vim-run-interactive'
+Bundle 'terryma/vim-multiple-cursors'
 Bundle 'Valloric/YouCompleteMe'
 Bundle 'croaky/vim-colors-github'
 Bundle "tomasr/molokai"
@@ -71,3 +72,5 @@ set expandtab
 imap { {}<ESC>i<CR><ESC>V<O
 set tabstop=2
 set shiftwidth=2
+set foldmethod=syntax
+set foldlevelstart=99
