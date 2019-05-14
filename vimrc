@@ -75,3 +75,4 @@ set shiftwidth=2
 set foldmethod=syntax
 set foldlevelstart=99
 set encoding=utf-8
+set clipboard=unnamed

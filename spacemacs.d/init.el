@@ -441,6 +441,7 @@ you should place your code here."
         (setq-local flycheck-javascript-eslint-executable eslint))))
 
   (add-hook 'flycheck-mode-hook #'my/use-eslint-from-node-modules)
+  (setenv "LC_ALL" "C")
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
